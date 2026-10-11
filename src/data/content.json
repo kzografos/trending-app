@@ -1,0 +1,143 @@
+{
+  "categories": {
+    "trending": [
+      {
+        "id": 1,
+        "title": "Echoes of Orion",
+        "year": 2019,
+        "genre": ["Sci-Fi", "Drama"],
+        "rating": 8.0,
+        "thumbnail": "https://placehold.co/500x750/1e293b/f8fafc?text=Echoes+of+Orion",
+        "video_url": "https://example.com/videos/echoes-of-orion.mp4",
+        "duration": 45,
+        "description": "A deep-space engineer receives a signal that sounds exactly like her own voice.",
+        "cast": ["Mara Lindqvist", "Theo Adebayo", "Jonah Kessler"],
+        "watchProgress": 0
+      },
+      {
+        "id": 2,
+        "title": "The Salt Road",
+        "year": 2017,
+        "genre": ["Adventure", "Western"],
+        "rating": 8.0,
+        "thumbnail": "https://placehold.co/500x750/78350f/fef3c7?text=The+Salt+Road",
+        "video_url": "https://example.com/videos/TheSaltRoad.mp4",
+        "duration": 120,
+        "description": "Two estranged brothers cross a desert to deliver a cargo nobody wants them to reach.",
+        "cast": [
+          "Diego Navarro",
+          "Callum Reed",
+          "Ines Moreau",
+          "Mara Lindqvist",
+          "Theo Adebayo",
+          "Jonah Kessler"
+        ],
+        "watchProgress": 0
+      },
+      {
+        "id": 3,
+        "title": "Midnight Ledger",
+        "year": 2023,
+        "genre": ["Thriller", "Crime"],
+        "rating": 8.0,
+        "thumbnail": "https://placehold.co/500x750/0f172a/38bdf8?text=Midnight+Ledger",
+        "video_url": "https://example.com/videos/MidnightLedger.mp4",
+        "duration": 109,
+        "description": "A junior accountant finds a second set of books and becomes the only witness.",
+        "cast": ["Anika Sorensen", "Marcus Hale", "Priya Venkat"],
+        "watchProgress": 0
+      },
+      {
+        "id": 4,
+        "title": "Paper Lanterns",
+        "year": 2015,
+        "genre": ["Romance", "Drama"],
+        "rating": 7.1,
+        "thumbnail": "https://placehold.co/500x750/9f1239/ffe4e6?text=Paper+Lanterns",
+        "video_url": "https://example.com/videos/PaperLanterns.mp4",
+        "duration": 101,
+        "description": "Every summer festival, two strangers meet for one night and promise nothing more.",
+        "cast": ["Yuki Tanabe", "Elliot Varga", "Sofia Castell"],
+        "watchProgress": 0
+      },
+      {
+        "id": 5,
+        "title": "Iron Harbor",
+        "year": 2020,
+        "genre": ["Action", "War"],
+        "rating": 6.4,
+        "thumbnail": "https://placehold.co/500x750/374151/e5e7eb?text=Iron+Harbor",
+        "video_url": "https://example.com/videos/IronHarbor.mp4",
+        "duration": 141,
+        "description": "A dockworker militia holds a port city for seven days against an advancing army.",
+        "cast": ["Viktor Rusu", "Hana Okafor", "Gregor Brandt"],
+        "watchProgress": 0
+      },
+      {
+        "id": 6,
+        "title": "Small Hours",
+        "year": 2018,
+        "genre": ["Comedy"],
+        "rating": 7.3,
+        "thumbnail": "https://placehold.co/500x750/fde047/1c1917?text=Small+Hours",
+        "video_url": "https://example.com/videos/SmallHours.mp4",
+        "duration": 94,
+        "description": "A night-shift pharmacist and three regulars try to survive the weirdest shift ever.",
+        "cast": ["Leo Fontaine", "Dana Whitmore", "Rafi Haddad"],
+        "watchProgress": 0
+      },
+      {
+        "id": 7,
+        "title": "Hollowmere",
+        "year": 2022,
+        "genre": ["Horror", "Mystery"],
+        "rating": 6.8,
+        "thumbnail": "https://placehold.co/500x750/14532d/bbf7d0?text=Hollowmere",
+        "video_url": "https://example.com/videos/Hollowmere.mp4",
+        "duration": 104,
+        "description": "A family inherits a lakeside house where the water level drops every night.",
+        "cast": ["Clara Novak", "Isaac Pemberton", "Lucia Ferrante"],
+        "watchProgress": 0
+      },
+      {
+        "id": 8,
+        "title": "Last Light of Vael",
+        "year": 2024,
+        "genre": ["Fantasy", "Adventure"],
+        "rating": 8.5,
+        "thumbnail": "https://placehold.co/500x750/4c1d95/ede9fe?text=Last+Light+of+Vael",
+        "video_url": "https://example.com/videos/LastLightOfVael.mp4",
+        "duration": 156,
+        "description": "The last lamplighter of a dying kingdom must carry its final flame across the mountains.",
+        "cast": ["Aria Dumont", "Kaspar Ilves", "Noor Rahman"],
+        "watchProgress": 0
+      },
+      {
+        "id": 9,
+        "title": "Gravel & Gold",
+        "year": 2016,
+        "genre": ["Documentary", "Sport"],
+        "rating": 7.8,
+        "thumbnail": "https://placehold.co/500x750/b45309/fffbeb?text=Gravel+%26+Gold",
+        "video_url": "https://example.com/videos/gravel-and-gold.mp4",
+        "duration": 88,
+        "description": "Inside the lives of amateur rally drivers chasing one shot at a national title.",
+        "cast": ["Tomas Lindgren", "Bea Kowalski", "Sam Okoro"],
+        "watchProgress": 0
+      },
+      {
+        "id": 10,
+        "title": "Steel Covenant",
+        "year": 2025,
+        "genre": ["Sci-Fi", "Action"],
+        "rating": 7.4,
+        "thumbnail": "https://placehold.co/500x750/111827/f87171?text=Steel+Covenant",
+        "video_url": "https://example.com/videos/SteelCovenant.mp4",
+        "duration": 127,
+        "description": "In a city run by machines, a former soldier is hired to protect the last human mayor.",
+        "cast": ["Rhea Castillo", "Owen Mbeki", "Felix Andersson"],
+        "watchProgress": 0
+      }
+    ]
+  }
+}
