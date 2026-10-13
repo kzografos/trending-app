@@ -1,0 +1,142 @@
+.section {
+  padding: 24px 16px; /* 16px κενό στα πλάγια στο κινητό */
+}
+
+.heading {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.row {
+  --tile-width: 140px;
+  list-style: none;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-inline: 8px;
+  padding-block: 12px;
+  scroll-padding-inline: 8px;
+  margin-inline: -8px;
+  scroll-snap-type: x proximity;
+}
+
+.item {
+  flex: 0 0 var(--tile-width);
+  scroll-snap-align: start;
+}
+
+.tile {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.poster {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #1f1f1f;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  overflow: hidden;
+  margin-top: 8px;
+  font-size: 0.875rem;
+}
+
+.tile:focus-visible {
+  outline: none;
+}
+
+.retryButton {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--foreground);
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.retryButton:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .tile:hover .poster {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  }
+}
+
+.tile:focus-visible .poster {
+  outline: 3px solid var(--foreground);
+  outline-offset: 3px;
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 24px 32px;
+  }
+
+  .row {
+    --tile-width: 160px;
+    gap: 16px;
+    padding-block: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding: 24px 64px;
+  }
+
+  .row {
+    --tile-width: 180px;
+    gap: 20px;
+    padding-block: 20px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .section {
+    padding: 24px 128px;
+  }
+
+  .row {
+    --tile-width: 200px;
+    gap: 24px;
+    padding-block: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster {
+    transition: none;
+  }
+  .tile:hover .poster,
+  .tile:focus-visible .poster {
+    transform: none;
+  }
+}
