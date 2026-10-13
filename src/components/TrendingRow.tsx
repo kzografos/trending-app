@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import type { ContentItem } from "@/types/content";
+import { ContentModal } from "@/components/ContentModal";
 import { useTrending } from "@/hooks/useTrending";
 import styles from "./TrendingRow.module.css";
 
@@ -20,6 +23,7 @@ function RowSkeleton() {
 
 export function TrendingRow() {
   const { status, items, retry } = useTrending();
+  const [selected, setSelected] = useState<ContentItem | null>(null);
 
   return (
     <section
@@ -54,7 +58,11 @@ export function TrendingRow() {
         <ul className={styles.row}>
           {items.map((item) => (
             <li key={item.id} className={styles.item}>
-              <button type="button" className={styles.tile}>
+              <button
+                type="button"
+                className={styles.tile}
+                onClick={() => setSelected(item)}
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element -- external API thumbnails (SVG placeholders); see README */}
                 <img
                   className={styles.poster}
@@ -70,6 +78,7 @@ export function TrendingRow() {
           ))}
         </ul>
       )}
+      <ContentModal item={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }
