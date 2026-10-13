@@ -81,6 +81,38 @@
   outline-offset: 2px;
 }
 
+.skeletonRow {
+  overflow: hidden;
+}
+
+.skeletonPoster {
+  aspect-ratio: 2 / 3;
+  border-radius: 6px;
+  background: #1f1f1f;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.skeletonTitle {
+  width: 70%;
+  height: 0.875rem;
+  margin-top: 8px;
+  border-radius: 4px;
+  background: #1f1f1f;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 @media (hover: hover) {
   .tile:hover .poster {
     transform: scale(1.05);
@@ -138,5 +170,9 @@
   .tile:hover .poster,
   .tile:focus-visible .poster {
     transform: none;
+  }
+  .skeletonPoster,
+  .skeletonTitle {
+    animation: none;
   }
 }

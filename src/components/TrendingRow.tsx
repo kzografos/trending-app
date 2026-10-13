@@ -1,17 +1,42 @@
 "use client";
+
 import { useTrending } from "@/hooks/useTrending";
 import styles from "./TrendingRow.module.css";
+
+const SKELETON_COUNT = 8;
+
+function RowSkeleton() {
+  return (
+    <ul className={`${styles.row} ${styles.skeletonRow}`} aria-hidden="true">
+      {Array.from({ length: SKELETON_COUNT }, (_, i) => (
+        <li key={i} className={styles.item}>
+          <div className={styles.skeletonPoster} />
+          <div className={styles.skeletonTitle} />
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export function TrendingRow() {
   const { status, items, retry } = useTrending();
 
   return (
-    <section className={styles.section} aria-labelledby="trending-heading">
+    <section
+      className={styles.section}
+      aria-labelledby="trending-heading"
+      aria-busy={status === "loading"}
+    >
       <h2 className={styles.heading} id="trending-heading">
         Trending Now
       </h2>
 
-      {status === "loading" && <p>Loading...</p>}
+      <p role="status" className="visually-hidden">
+        {status === "loading" ? "Loading trending titles..." : ""}
+      </p>
+
+      {status === "loading" && <RowSkeleton />}
+
       {status === "error" && (
         <div role="alert">
           <p>Failed to load trending titles.</p>
