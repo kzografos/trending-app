@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import type { ContentItem } from "@/types/content";
 import { formatDuration, formatRating } from "@/lib/format";
 import styles from "./ContentModal.module.css";
+import { VideoPlayer } from "./VideoPlayer";
 
 interface ContentModalProps {
   item: ContentItem | null;
@@ -81,6 +82,7 @@ export function ContentModal({ item, onClose }: ContentModalProps) {
               <span aria-hidden="true">&times;</span>
             </button>
           </header>
+          <VideoPlayer key={item.id} src={item.video_url} title={item.title} />
           <div className={styles.body}>
             {/* eslint-disable-next-line @next/next/no-img-element -- external API thumbnails (SVG placeholders); see README */}
             <img
