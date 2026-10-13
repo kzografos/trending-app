@@ -1,8 +1,9 @@
+import { TrendingRow } from "@/components/TrendingRow";
+
 export default function Page() {
   return (
     <main>
-      <h1>Trending App</h1>
-      <p>Coming soon.</p>
+      <TrendingRow />
     </main>
   );
 }
