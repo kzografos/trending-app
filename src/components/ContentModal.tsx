@@ -8,6 +8,15 @@ interface ContentModalProps {
   onClose: () => void;
 }
 
+const FOCUSABLE_SELECTOR =
+  'button, [href], input, select, textarea, video[controls], [tabindex]:not([tabindex="-1"])';
+
+function getFocusables(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+  ).filter((el) => !el.hasAttribute("data-focus-guard"));
+}
+
 export function ContentModal({ item, onClose }: ContentModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -23,9 +32,29 @@ export function ContentModal({ item, onClose }: ContentModalProps) {
       dialog.close();
     }
   }, [item]);
+
   // Backdrop clicks land on the <dialog> itself; clicks inside land on .content
   function handleDialogClick(event: React.MouseEvent<HTMLDialogElement>) {
     if (event.target === event.currentTarget) onClose();
+  }
+
+  // Shift+Tab on the first element wraps to the last one
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDialogElement>) {
+    if (event.key !== "Tab" || !event.shiftKey) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const focusables = getFocusables(dialog);
+    if (document.activeElement === focusables[0]) {
+      event.preventDefault();
+      focusables[focusables.length - 1]?.focus();
+    }
+  }
+  // Tab past the last element lands on the guard and wraps to the first one
+  function handleGuardFocus() {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    getFocusables(dialog)[0]?.focus();
   }
 
   return (
@@ -35,6 +64,7 @@ export function ContentModal({ item, onClose }: ContentModalProps) {
       aria-labelledby="modal-title"
       onClose={onClose}
       onClick={handleDialogClick}
+      onKeyDown={handleKeyDown}
     >
       {item && (
         <div className={styles.content}>
@@ -74,6 +104,7 @@ export function ContentModal({ item, onClose }: ContentModalProps) {
               <p className={styles.muted}>Cast: {item.cast.join(", ")}</p>
             </div>
           </div>
+          <span tabIndex={0} data-focus-guard onFocus={handleGuardFocus} />
         </div>
       )}
     </dialog>
