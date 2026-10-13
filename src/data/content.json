@@ -8,7 +8,7 @@
         "genre": ["Sci-Fi", "Drama"],
         "rating": 8.0,
         "thumbnail": "https://placehold.co/500x750/1e293b/f8fafc?text=Echoes+of+Orion",
-        "video_url": "https://example.com/videos/echoes-of-orion.mp4",
+        "video_url": "/videos/sample.mp4",
         "duration": 45,
         "description": "A deep-space engineer receives a signal that sounds exactly like her own voice.",
         "cast": ["Mara Lindqvist", "Theo Adebayo", "Jonah Kessler"],
