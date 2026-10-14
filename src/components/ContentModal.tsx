@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { ContentItem } from "@/types/content";
 import { formatDuration, formatRating } from "@/lib/format";
+import { useWatchHistory } from "@/hooks/useWatchHistory";
 import styles from "./ContentModal.module.css";
 import { VideoPlayer } from "./VideoPlayer";
 
@@ -20,6 +21,8 @@ function getFocusables(container: HTMLElement): HTMLElement[] {
 
 export function ContentModal({ item, onClose }: ContentModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const { recordProgress } = useWatchHistory();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -82,7 +85,12 @@ export function ContentModal({ item, onClose }: ContentModalProps) {
               <span aria-hidden="true">&times;</span>
             </button>
           </header>
-          <VideoPlayer key={item.id} src={item.video_url} title={item.title} />
+          <VideoPlayer
+            key={item.id}
+            src={item.video_url}
+            title={item.title}
+            onProgress={(percent) => recordProgress(item.id, percent)}
+          />
           <div className={styles.body}>
             {/* eslint-disable-next-line @next/next/no-img-element -- external API thumbnails (SVG placeholders); see README */}
             <img
