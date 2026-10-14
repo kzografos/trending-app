@@ -4,6 +4,8 @@ import { useState } from "react";
 import type { ContentItem } from "@/types/content";
 import { ContentModal } from "@/components/ContentModal";
 import { useTrending } from "@/hooks/useTrending";
+import { useWatchHistory } from "@/hooks/useWatchHistory";
+import { ProgressBar } from "./ProgressBar";
 import styles from "./TrendingRow.module.css";
 
 const SKELETON_COUNT = 8;
@@ -24,6 +26,7 @@ function RowSkeleton() {
 export function TrendingRow() {
   const { status, items, retry } = useTrending();
   const [selected, setSelected] = useState<ContentItem | null>(null);
+  const { history } = useWatchHistory();
 
   return (
     <section
@@ -56,26 +59,34 @@ export function TrendingRow() {
 
       {status === "success" && items.length > 0 && (
         <ul className={styles.row}>
-          {items.map((item) => (
-            <li key={item.id} className={styles.item}>
-              <button
-                type="button"
-                className={styles.tile}
-                onClick={() => setSelected(item)}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element -- external API thumbnails (SVG placeholders); see README */}
-                <img
-                  className={styles.poster}
-                  src={item.thumbnail}
-                  alt=""
-                  width={500}
-                  height={750}
-                  loading="lazy"
-                />
-                <span className={styles.title}>{item.title}</span>
-              </button>
-            </li>
-          ))}
+          {items.map((item) => {
+            const progress = history[item.id]?.progress ?? 0;
+
+            return (
+              <li key={item.id} className={styles.item}>
+                <button
+                  type="button"
+                  className={styles.tile}
+                  onClick={() => setSelected(item)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- external API thumbnails (SVG placeholders); see README */}
+                  <img
+                    className={styles.poster}
+                    src={item.thumbnail}
+                    alt=""
+                    width={500}
+                    height={750}
+                    loading="lazy"
+                  />
+                  {progress > 0 && <ProgressBar value={progress} />}
+                  <span className={styles.title}>{item.title}</span>
+                  {progress > 0 && (
+                    <span className="visually-hidden">{`, ${progress}% watched`}</span>
+                  )}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       )}
       <ContentModal item={selected} onClose={() => setSelected(null)} />
