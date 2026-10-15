@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Part 1 review target: kept intentionally unmodified (findings documented in README)
+    "src/app/review/**",
   ]),
 ]);
 
