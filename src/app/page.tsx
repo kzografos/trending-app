@@ -2,7 +2,7 @@ import { Browse } from "@/components/Browse";
 
 export default function Page() {
   return (
-    <main>
+    <main id="main">
       <Browse />
     </main>
   );

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
+import { Header } from "@/components/Header";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -8,8 +9,9 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Trending App",
-  description: "A trending app streaming platform for the latest trends.",
+  title: "ZenithFlix",
+  description:
+    "ZenithFlix Streaming Platform: Browse trending movies and series.",
 };
 
 export const viewport: Viewport = {
@@ -18,8 +20,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={geistSans.variable}>
+      <body>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
