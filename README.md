@@ -6,10 +6,11 @@ This is my solution to the Front-End Developer assessment. I built the home page
 - a **detail modal** with a video player (and a fallback when the video can't play)
 - **watch history** saved in `localStorage`, shown as progress bars and a **Recently Watched** row
 - **search and genre filters** for the Trending row (bonus)
+- **sign in** with a demo account (JWT in an `httpOnly` cookie) and an **account menu** in the header (bonus)
 
 I also reviewed the provided `ContentBrowser.tsx` (Part 1) and fixed every issue I found in my own code.
 
-**Stack:** Next.js 16 (App Router) · React 19 · TypeScript (strict) · CSS Modules · Jest + React Testing Library
+**Stack:** Next.js 16 (App Router) · React 19 · TypeScript (strict) · CSS Modules · Jest + React Testing Library · `jose` (JWT)
 
 ---
 
@@ -19,8 +20,17 @@ I also reviewed the provided `ContentBrowser.tsx` (Part 1) and fixed every issue
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
+cp .env.example .env.local        # Windows (cmd): copy .env.example .env.local
+npm run dev                       # http://localhost:3000
 ```
+
+**`AUTH_SECRET` is required for signing in.** It is the key used to sign the session tokens. Generate one and paste it into `.env.local`:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+`.env.local` is ignored by git, so the secret never reaches the repository. On Vercel, the same variable is set in _Project Settings → Environment Variables_.
 
 | Script                        | What it does                              |
 | ----------------------------- | ----------------------------------------- |
@@ -33,6 +43,9 @@ npm run dev        # http://localhost:3000
 
 - **Video and watch history:** open **Echoes of Orion**. It is the only title with a playable video (`/videos/sample.mp4`). Play it for a few seconds: the progress appears on the tile and in **Recently Watched**. The other titles use unavailable video URLs, like the sample data, so they show the fallback.
 - **Search and filters:** type in "Search titles" (for example `orion`), or pick a genre chip. Both can be combined. Try `zzz` to see the "no results" state with **Clear filters**.
+- **Sign in:** click **Sign in** and use the demo account **`demo@zenithflix.dev`** / **`zenith-demo`**. The header then shows an avatar with an account menu and **Sign out**.
+  - To see the token check work: in DevTools → _Application → Cookies_, change one character of the `session` cookie and reload. You are signed out, because the signature no longer matches.
+  - Sign in, the menu and sign out also work with JavaScript disabled.
 - **Loading, error and empty states:** the mock API (`src/app/api/content/route.ts`) reads a `scenario` cookie. Run one of these in the browser console, then reload:
 
   ```js
@@ -51,28 +64,32 @@ npm run dev        # http://localhost:3000
 ## 2. How I structured the app
 
 ```
-app/layout.tsx (Server)       Header (Server: no JavaScript sent to the browser)
+app/layout.tsx (Server)       Header (Server): reads the session cookie → "Sign in" or the account menu
 app/page.tsx   (Server)
   └── Browse  ("use client")   loads the data, keeps the history, the filters and the open item
         ├── BrowseToolbar      search + genre chips
         ├── TrendingRow        loading / error / empty / tiles
         ├── HistoryRow         "Recently Watched"
         └── ContentModal       <dialog> + VideoPlayer
+app/login/page.tsx (Server)    redirects home if already signed in
+  └── LoginForm ("use client") useActionState → login() Server Action
 ```
 
 ```
 src/
-  app/            pages, layout, mock API (api/content), Part 1 page (review)
+  app/            pages, layout, mock API (api/content), login page + Server Actions, Part 1 page (review)
   components/     UI components, each with its own CSS Module
   hooks/          useTrending, useWatchHistory
-  lib/            API client, formatters, filters, watch-history store (plain TypeScript, no React)
+  lib/            API client, formatters, filters, login validation, watch-history store,
+                  session (JWT + cookie, server only)
   data/           mock content
   types/          ContentItem, ApiResponse, WatchHistory
 ```
 
-- **Server Components by default.** The layout, the page and the header render on the server. `Browse` is the only component marked `"use client"`, because it is the only one that needs state. Everything it imports also runs in the browser.
+- **Server Components by default.** The layout, the pages and the header render on the server. Only the components that need state are marked `"use client"`: `Browse` and `LoginForm`. Everything they import also runs in the browser.
 - **Data flow.** `fetchTrending()` loads the data **and checks its shape**. `useTrending()` handles the React side: state, cancelling old requests, retry. The rows only display what they receive as props and report clicks back with `onSelect` / `onRetry`.
 - **Filtered results are calculated, not stored.** `Browse` keeps only the search text and the selected genre in state. The filtered list is calculated from them on every render (`filterItems(items, { query, genre })`). I didn't store it in a second state synced with a `useEffect`: that adds an extra render, can show stale data for a moment, and is the same "setState inside an effect" pattern as in the Part 1 code. The filtering logic is a plain function, so it is unit-tested without React.
+- **Two ways to run code on the server, each where it fits.** `/api/content` is a **Route Handler**, because it stands in for a REST API that the browser fetches. Sign in and sign out are **Server Actions**, because they are forms of this app: no URL to design, no `fetch`, and they work before JavaScript has loaded.
 - **Types match the API exactly**, including the mixed naming (`video_url`, `watchProgress`). I chose this so there is no extra mapping layer to maintain. The cost is that the mixed naming appears in the code.
 - **Styling.** CSS Modules only, mobile-first, breakpoints at 768 / 1024 / 1280 px, dark theme, a few CSS variables (`--background`, `--foreground`, `--accent`). The horizontal rows keep a thin, subtle scrollbar instead of hiding it. On desktop it is the only visible hint that there is more content (and the only way to scroll for a mouse without horizontal scrolling).
 - **Images.** `next/image` with `sizes` that match the tile widths, so the browser downloads small WebP files (~2 KB each) instead of the 500 px originals. `width`/`height` reserve the space, so the page doesn't jump. The first posters of the Trending row load immediately, because they are visible on first paint. The rest load lazily. The placeholder service returns SVG by default, which `next/image` doesn't optimise, so I request PNG (`/png`) and allow `placehold.co` in `next.config.ts`.
@@ -80,7 +97,8 @@ src/
   - Every clickable element is a real `<button>` or `<a>`, with a visible focus style.
   - There is a "Skip to content" link.
   - Loading is announced to screen readers.
-  - Decorative graphics are hidden from screen readers, and where meaning is only visual (rating star, progress bar) there is a text alternative.
+  - Decorative graphics are hidden from screen readers, and where meaning is only visual (rating star, progress bar, avatar initial) there is a text alternative.
+  - Form errors are linked to their fields (`aria-invalid`, `aria-describedby`).
   - Hover animations respect "reduced motion", and zoom is not blocked.
 
 ---
@@ -105,6 +123,8 @@ I added only what was missing:
 - Stopping the page behind from scrolling.
 
 **Trade-off:** I have less control over how it works internally, and the test environment (jsdom) doesn't support `showModal()`. So I tested the modal by hand instead of with unit tests.
+
+I followed the same idea for the account menu, which uses the browser's **Popover API** (`popover` / `popovertarget`): it opens on top of everything and closes on Escape or an outside click, with no JavaScript of mine.
 
 ### 3.2 I used `useSyncExternalStore` for the watch history (instead of `useState` + `useEffect`)
 
@@ -250,6 +270,7 @@ const [status, setStatus] = useState<Status>("loading");
 - `watchProgress` from the API is always 0. Real progress comes from the local watch history.
 - There is no pagination, so `?page=` is ignored.
 - The mock error response is plain text with status 500, like many real servers send.
+- Titles are loaded **in the browser** through `/api/content`, as in the original component. So browsing needs JavaScript: without it the skeleton stays on screen. Sign in, the account menu and sign out still work without JavaScript.
 - Placeholder images are requested as PNG instead of the sample's SVG, so that `next/image` can optimise them.
 
 **UX**
@@ -270,6 +291,22 @@ const [status, setStatus] = useState<Status>("loading");
 - "No results" has its own message and a **Clear filters** button, because, unlike an empty catalogue, the user can fix it.
 - Accessibility: the bar is a `search` landmark, the input has a label (not just a placeholder), the chips are toggle buttons (`aria-pressed`), and the number of results is announced to screen readers. The chip's "selected" style comes from the same `aria-pressed` attribute, so what you see and what a screen reader hears can't disagree.
 
+**Sign in (bonus)**
+
+- **One demo account**, shown on the login page, so reviewers can sign in. There is no sign-up, because a real one needs a database.
+- **How the session works:**
+  1. The `login` Server Action validates the form on the server.
+  2. It checks the credentials and signs a JWT (`jose`, HS256, 2-hour expiry).
+  3. It stores the JWT in an **`httpOnly`, `SameSite=Lax` cookie** (`Secure` in production), **not** in `localStorage`. JavaScript on the page can't read it, so an XSS bug can't steal it.
+- **The header checks the token on the server**, on every request. So the first HTML already shows the right state ("Sign in" or the avatar), with no flash. Verification only accepts HS256, and the token's contents are checked before use. A tampered or expired token simply means "signed out", never an error page.
+- `src/lib/session.ts` imports `server-only`, so the build fails if it is ever imported into browser code. The secret can't leak that way.
+- **Form UX:**
+  - Errors appear next to their fields and are linked to them for screen readers.
+  - Wrong credentials show one generic message ("Email or password is incorrect"), so the form doesn't reveal which emails exist.
+  - The email you typed is kept after a failed attempt; the password is not.
+  - The button shows "Signing in…" and can't be submitted twice.
+- Because the header reads a cookie, pages are rendered per request (dynamic), which is expected for per-user content.
+
 ---
 
 ## 6. Testing
@@ -287,17 +324,28 @@ npm test   # 4 suites, 22 tests
 
 I query elements the way a user or a screen reader finds them (`getByRole("button", { name: ... })`), so the tests also check accessibility. If a tile were a `<div>` again, they would fail.
 
-**What I didn't unit-test, and why:** the modal, the focus trap and the video. The test environment has no `showModal()` and can't play media, so these need a real browser. I tested them by hand, and they are the first thing I would cover with end-to-end tests.
+**What I didn't unit-test, and why:** the modal, the focus trap, the video and the sign-in flow. The test environment has no `showModal()`, can't play media, and Server Actions and cookies need a running Next server. I tested these by hand, including the tampered-cookie and JavaScript-disabled cases, and they are the first thing I would cover with end-to-end tests.
 
 ---
 
 ## 7. Next steps
 
-**Scope:** I first delivered the required features complete, accessible and tested. Then I added one bonus that fits the existing architecture well: search and genre filters. I left out login and the user menu on purpose, because I would rather not ship a half-done authentication flow.
+**Scope:** I first delivered the required features complete, accessible and tested. Then I added bonuses that fit the existing architecture: search and genre filters, and sign in with a JWT session and an account menu.
 
-**Authentication (planned, not implemented).** This is how I would add login with a JWT:
+**For a production-ready sign in, I would add:**
 
-- A login form posts to a Route Handler (`app/api/auth/login`), which checks the credentials on the server and signs a short-lived JWT.
-- The token goes into an **`httpOnly`, `Secure`, `SameSite=Lax` cookie**, **not** `localStorage`. JavaScript on the page can't read an `httpOnly` cookie, so an XSS bug can't steal the token.
-- Server Components (the header, protected pages) read and verify the cookie on the server. So the user state ("Sign in" or the avatar menu) is correct in the first HTML, with no flash of the wrong state.
-- Logout is a Route Handler that clears the cookie. A refresh-token flow would follow for longer sessions.
+- real users in a database, with hashed passwords (bcrypt / argon2), and a sign-up flow
+- rate limiting on login attempts
+- shorter-lived tokens with refresh / session rotation, and server-side session revocation
+- protected pages (for example a profile page) that redirect to `/login` when signed out
+
+**With more time, I would also:**
+
+- add end-to-end tests (Playwright) for the modal, the focus trap, the video progress, the sign-in flow and keyboard navigation
+- load the first Trending titles on the server (in a Server Component), so they are already in the first HTML: faster first paint, and browsing without JavaScript
+- add ◀ ▶ buttons to scroll the rows on desktop, like most streaming platforms
+- resume playback from the saved position (the brief excluded it)
+- show "Try again" for the video only when the error is a network problem, not a missing file
+- add an Error Boundary (`error.tsx`) around each row as a second safety net
+- add captions (`<track kind="captions">`) for real video content
+- keep the search text and genre in the URL (`?q=…&genre=…`), so a filtered view can be shared and survives a reload
