@@ -25,6 +25,11 @@
   scroll-snap-align: start;
 }
 
+.empty {
+  color: #a3a3a3;
+  font-size: 0.875rem;
+}
+
 .retryButton {
   margin-top: 8px;
   padding: 8px 16px;

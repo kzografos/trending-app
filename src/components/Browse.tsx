@@ -6,6 +6,7 @@ import { useTrending } from "@/hooks/useTrending";
 import { useWatchHistory } from "@/hooks/useWatchHistory";
 import { ContentModal } from "./ContentModal";
 import { TrendingRow } from "./TrendingRow";
+import { HistoryRow } from "./HistoryRow";
 
 export function Browse() {
   const { status, items, retry } = useTrending();
@@ -21,7 +22,9 @@ export function Browse() {
         onRetry={retry}
         onSelect={setSelected}
       />
-      {/* H5c: HistoryRow εδώ */}
+      {status === "success" && (
+        <HistoryRow items={items} history={history} onSelect={setSelected} />
+      )}
       <ContentModal item={selected} onClose={() => setSelected(null)} />
     </>
   );
