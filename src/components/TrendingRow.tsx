@@ -5,6 +5,7 @@ import { ContentTile } from "./ContentTile";
 import styles from "./Row.module.css";
 
 const SKELETON_COUNT = 8;
+const EAGER_TILE_COUNT = 6;
 
 function RowSkeleton() {
   return (
@@ -69,12 +70,13 @@ export function TrendingRow({
 
       {status === "success" && items.length > 0 && (
         <ul className={styles.row}>
-          {items.map((item) => (
+          {items.map((item, index) => (
             <li key={item.id} className={styles.item}>
               <ContentTile
                 item={item}
                 progress={history[item.id]?.progress ?? 0}
                 onSelect={onSelect}
+                eager={index < EAGER_TILE_COUNT}
               />
             </li>
           ))}
