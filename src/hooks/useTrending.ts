@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import type { ContentItem } from "@/types/content";
 import { fetchTrending } from "@/lib/api";
 
-type Status = "loading" | "error" | "success";
+export type Status = "loading" | "error" | "success";
 
 export function useTrending() {
   const [status, setStatus] = useState<Status>("loading");

@@ -1,10 +1,6 @@
-"use client";
-
-import { useState } from "react";
 import type { ContentItem } from "@/types/content";
-import { ContentModal } from "@/components/ContentModal";
-import { useTrending } from "@/hooks/useTrending";
-import { useWatchHistory } from "@/hooks/useWatchHistory";
+import type { WatchHistory } from "@/types/watchHistory";
+import type { Status } from "@/hooks/useTrending";
 import { ContentTile } from "./ContentTile";
 import styles from "./Row.module.css";
 
@@ -23,11 +19,21 @@ function RowSkeleton() {
   );
 }
 
-export function TrendingRow() {
-  const { status, items, retry } = useTrending();
-  const [selected, setSelected] = useState<ContentItem | null>(null);
-  const { history } = useWatchHistory();
+interface TrendingRowProps {
+  status: Status;
+  items: ContentItem[];
+  history: WatchHistory;
+  onRetry: () => void;
+  onSelect: (item: ContentItem) => void;
+}
 
+export function TrendingRow({
+  status,
+  items,
+  history,
+  onRetry,
+  onSelect,
+}: TrendingRowProps) {
   return (
     <section
       className={styles.section}
@@ -47,7 +53,11 @@ export function TrendingRow() {
       {status === "error" && (
         <div role="alert">
           <p>Failed to load trending titles.</p>
-          <button className={styles.retryButton} type="button" onClick={retry}>
+          <button
+            className={styles.retryButton}
+            type="button"
+            onClick={onRetry}
+          >
             Retry
           </button>
         </div>
@@ -64,13 +74,12 @@ export function TrendingRow() {
               <ContentTile
                 item={item}
                 progress={history[item.id]?.progress ?? 0}
-                onSelect={setSelected}
+                onSelect={onSelect}
               />
             </li>
           ))}
         </ul>
       )}
-      <ContentModal item={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }

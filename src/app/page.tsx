@@ -1,9 +1,9 @@
-import { TrendingRow } from "@/components/TrendingRow";
+import { Browse } from "@/components/Browse";
 
 export default function Page() {
   return (
     <main>
-      <TrendingRow />
+      <Browse />
     </main>
   );
 }
