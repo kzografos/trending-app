@@ -1,0 +1,24 @@
+.page {
+  display: grid;
+  place-items: center;
+  padding: 48px 16px;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  padding: 32px 24px;
+  border-radius: 8px;
+  background: #141414;
+}
+
+.title {
+  margin-bottom: 24px;
+  font-size: 1.75rem;
+}
+
+.hint {
+  margin-top: 24px;
+  color: #a3a3a3;
+  font-size: 0.875rem;
+}
