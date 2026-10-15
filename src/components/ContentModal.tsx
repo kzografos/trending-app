@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { ContentItem } from "@/types/content";
+import Image from "next/image";
 import { formatDuration, formatRating } from "@/lib/format";
 import { useWatchHistory } from "@/hooks/useWatchHistory";
 import styles from "./ContentModal.module.css";
@@ -92,13 +93,13 @@ export function ContentModal({ item, onClose }: ContentModalProps) {
             onProgress={(percent) => recordProgress(item.id, percent)}
           />
           <div className={styles.body}>
-            {/* eslint-disable-next-line @next/next/no-img-element -- external API thumbnails (SVG placeholders); see README */}
-            <img
+            <Image
               className={styles.poster}
               src={item.thumbnail}
               alt=""
               width={500}
               height={750}
+              sizes="(min-width: 768px) 180px, 120px"
             />
 
             <div className={styles.info}>
