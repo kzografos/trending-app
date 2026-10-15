@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createSession } from "@/lib/session";
+import { createSession, deleteSession } from "@/lib/session";
 import { validateLogin, type LoginErrors } from "@/lib/validateLogin";
 
 // Public demo account, shown on the login page. A real app would look the user
@@ -40,5 +40,10 @@ export async function login(
   }
 
   await createSession({ email: DEMO_USER.email, name: DEMO_USER.name });
+  redirect("/");
+}
+
+export async function logout(): Promise<void> {
+  await deleteSession();
   redirect("/");
 }
