@@ -26,8 +26,10 @@
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding: 4px;
+  padding: 4px 4px 12px;
   margin-inline: -4px;
+  scrollbar-width: thin;
+  scrollbar-color: #3a3a3a transparent;
 }
 
 .chip {
