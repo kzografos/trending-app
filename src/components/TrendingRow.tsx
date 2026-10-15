@@ -26,6 +26,8 @@ interface TrendingRowProps {
   history: WatchHistory;
   onRetry: () => void;
   onSelect: (item: ContentItem) => void;
+  isFiltering?: boolean;
+  onClearFilters?: () => void;
 }
 
 export function TrendingRow({
@@ -34,6 +36,8 @@ export function TrendingRow({
   history,
   onRetry,
   onSelect,
+  isFiltering = false,
+  onClearFilters,
 }: TrendingRowProps) {
   return (
     <section
@@ -64,9 +68,22 @@ export function TrendingRow({
         </div>
       )}
 
-      {status === "success" && items.length === 0 && (
-        <p>No trending titles available right now.</p>
-      )}
+      {status === "success" &&
+        items.length === 0 &&
+        (isFiltering ? (
+          <div>
+            <p>No titles match your filters.</p>
+            <button
+              type="button"
+              className={styles.retryButton}
+              onClick={onClearFilters}
+            >
+              Clear filters
+            </button>
+          </div>
+        ) : (
+          <p>No trending titles available right now.</p>
+        ))}
 
       {status === "success" && items.length > 0 && (
         <ul className={styles.row}>
