@@ -1,4 +1,4 @@
-import { Browse } from "@/components/Browse";
+import { Browse } from "@/components/browse/Browse";
 
 export default function Page() {
   return (

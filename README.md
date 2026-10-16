@@ -78,7 +78,11 @@ app/login/page.tsx (Server)    redirects home if already signed in
 ```
 src/
   app/            pages, layout, mock API (api/content), login page + Server Actions, Part 1 page (review)
-  components/     UI components, each with its own CSS Module
+  components/     UI components grouped by feature; each CSS Module and test sits next to its component
+    layout/         Header
+    browse/         Browse, BrowseToolbar, TrendingRow, HistoryRow, ContentTile
+    content-modal/  ContentModal, VideoPlayer
+    ui/             ProgressBar (small, reusable pieces)
   hooks/          useTrending, useWatchHistory
   lib/            API client, formatters, filters, login validation, watch-history store,
                   session (JWT + cookie, server only)
@@ -241,7 +245,7 @@ A `<div>` with `onClick` can't receive focus, ignores Enter and Space, and scree
 // Before
 <div key={item.id} onClick={() => handleItemClick(item)}>
 
-// After (src/components/ContentTile.tsx)
+// After (src/components/browse/ContentTile.tsx)
 <button type="button" className={styles.tile} onClick={() => onSelect(item)}>
 ```
 

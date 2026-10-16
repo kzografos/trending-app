@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { ContentItem } from "@/types/content";
-import { ProgressBar } from "./ProgressBar";
+import { ProgressBar } from "@/components/ui/ProgressBar";
 import styles from "./ContentTile.module.css";
 
 interface ContentTileProps {

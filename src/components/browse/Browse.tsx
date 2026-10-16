@@ -5,7 +5,7 @@ import type { ContentItem } from "@/types/content";
 import { useTrending } from "@/hooks/useTrending";
 import { useWatchHistory } from "@/hooks/useWatchHistory";
 import { filterItems, getGenres } from "@/lib/filterContent";
-import { ContentModal } from "./ContentModal";
+import { ContentModal } from "@/components/content-modal/ContentModal";
 import { TrendingRow } from "./TrendingRow";
 import { HistoryRow } from "./HistoryRow";
 import { BrowseToolbar } from "./BrowseToolbar";
