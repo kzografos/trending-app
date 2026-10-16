@@ -14,6 +14,18 @@ I also reviewed the provided `ContentBrowser.tsx` (Part 1) and fixed every issue
 
 **Stack:** Next.js 16 (App Router) · React 19 · TypeScript (strict) · CSS Modules · Jest + React Testing Library · `jose` (JWT)
 
+## Screenshots
+
+| Home                                                                                                                                                         | Detail modal                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ![Home page: header with the Sign in button, search and genre filters, Trending Now with a watch-progress bar, and Recently Watched](docs/screenshots/home-desktop.png) | ![Detail modal for Echoes of Orion: video player, year, duration, rating, description, genre and cast](docs/screenshots/modal-desktop.png) |
+
+<p align="center">
+  <img src="docs/screenshots/home-mobile.png" alt="Home page on a phone" width="260">
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/modal-mobile.png" alt="Detail modal on a phone, shown full screen" width="260">
+</p>
+
 ---
 
 ## 1. Setup
@@ -334,24 +346,21 @@ I query elements the way a user or a screen reader finds them (`getByRole("butto
 
 ---
 
-## 7. Next steps
+## 7. Limitations and next steps
 
-**Scope:** I first delivered the required features complete, accessible and tested. Then I added bonuses that fit the existing architecture: search and genre filters, and sign in with a JWT session and an account menu.
+**Scope:** I first delivered the required features complete, accessible and tested. Then I added bonuses that fit the existing architecture: search and genre filters, and sign in with a JWT session and an account menu. The items below are outside the brief or were deliberate trade-offs. I list them because they are what I would prioritise next in a real product.
 
-**For a production-ready sign in, I would add:**
+**Known limitations**
 
-- real users in a database, with hashed passwords (bcrypt / argon2), and a sign-up flow
-- rate limiting on login attempts
-- shorter-lived tokens with refresh / session rotation, and server-side session revocation
-- protected pages (for example a profile page) that redirect to `/login` when signed out
+- Titles load in the browser, so browsing needs JavaScript (see Assumptions).
+- Sign in uses one demo account: there is no sign-up and no user database.
+- The modal, focus trap, video and sign-in flow are tested by hand, not automatically.
 
-**With more time, I would also:**
+**Next steps for a real product**
 
-- add end-to-end tests (Playwright) for the modal, the focus trap, the video progress, the sign-in flow and keyboard navigation
-- load the first Trending titles on the server (in a Server Component), so they are already in the first HTML: faster first paint, and browsing without JavaScript
-- add ◀ ▶ buttons to scroll the rows on desktop, like most streaming platforms
-- resume playback from the saved position (the brief excluded it)
-- show "Try again" for the video only when the error is a network problem, not a missing file
-- add an Error Boundary (`error.tsx`) around each row as a second safety net
-- add captions (`<track kind="captions">`) for real video content
-- keep the search text and genre in the URL (`?q=…&genre=…`), so a filtered view can be shared and survives a reload
+- End-to-end tests (Playwright) for the modal, focus trap, video progress, sign in and keyboard navigation.
+- Production sign in: users in a database with hashed passwords (bcrypt / argon2), sign-up, rate limiting, shorter-lived tokens with refresh, and protected pages.
+- Load the first Trending titles on the server (Server Component), so they are already in the first HTML.
+- Resume playback from the saved position (the brief excluded it).
+- ◀ ▶ buttons for the rows on desktop, and filters kept in the URL so a view can be shared.
+- Captions for real video content, and an Error Boundary (`error.tsx`) around each row.
