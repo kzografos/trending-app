@@ -1,5 +1,7 @@
 # ZenithFlix
 
+**Live demo:** [zenithflix.vercel.app](https://zenithflix.vercel.app) · demo account: `demo@zenithflix.dev` / `zenith-demo`
+
 This is my solution to the Front-End Developer assessment. I built the home page of a small streaming platform:
 
 - a **Trending Now** row with a loading skeleton, error and empty states
